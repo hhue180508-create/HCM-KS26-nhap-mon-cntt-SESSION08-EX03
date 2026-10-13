@@ -1,0 +1,20 @@
+BÀI LÀM: ĐẾM LỖI TIMEOUT BẰNG PIPELINE POWERSHELL
+Phần 1. Sơ đồ luồng dữ liệu
+Bước 1: Đọc tệp
+Get-Content .\access.log
+Bước 2: Lọc từ khóa
+Select-String "TIMEOUT"
+Loại dòng chứa NOT TIMEOUT bằng Where-Object
+Bước 3: Đếm kết quả
+Measure-Object → .Count
+Kết quả: Một con số tổng duy nhất
+Dấu | truyền kết quả từ lệnh trước sang lệnh sau. PowerShell truyền các đối tượng có cấu trúc, giúp ta lọc và đếm trực tiếp mà không cần tạo tệp trung gian.
+Phần 2. Câu lệnh PowerShell
+Giả sử mỗi dòng log tương ứng với một sự kiện, dùng lệnh một dòng sau:
+(get-content .\bao_cao_loi.txt | select-string "TIMEOUT" | where-object {$_-notmatch  "NOT TIMEOUT"}).COUNT
+Giải thích từng bước:
+Get-Content: Đọc nội dung tệp bao_cao_loi.txt
+Select-String "TIMEOUT": Tìm các dòng chứa từ khóa TIMEOUT.
+Where-Object { $_-notmatch "NOT TIMEOUT" }: Loại các dòng chứa NOT TIMEOUT để tránh đếm nhầm.
+.Count: Trả về tổng số kết quả dưới dạng một con số.
+
